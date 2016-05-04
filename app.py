@@ -35,6 +35,7 @@ def test_connect(message):
     client = clients[ip]
 
     for details in message['jskdetails']:
+
         _id = details['_id']
         client[_id] = {
             '_id' : _id,
