@@ -47,7 +47,7 @@ Example:
 
 ###Option 2 - Inject Script Tag
 
-Should you want to inject script tag instead of raw source code, __keyboardsnitch__ makes it easy to do that too. __keyboardsnitch__ can serve the keylogger as a JavaScript file without any additional configuration.
+Should you want to inject a script tag instead of raw source code, __keyboardsnitch__ makes it easy to do that too. __keyboardsnitch__ can serve the keylogger as a JavaScript file without any additional configuration.
 
 To generate a script tag linking to the keylogger, use the following command:
 
