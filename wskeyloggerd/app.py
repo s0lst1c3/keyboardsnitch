@@ -2,7 +2,7 @@ import json
 import logging
 import tables
 
-from flask import Flask, render_template, request
+from flask import Flask, make_response, render_template, request
 from flask.ext.socketio import SocketIO, emit
 from aux import pprint
 from datetime import datetime
@@ -15,13 +15,24 @@ socketio = SocketIO(app)
 hosts = {}
 configs = None
 
+@app.route('/test')
+def test():
+    configs = app.config['user_configs']
+    lhost = configs['lhost']
+    lport = configs['lport']
+    return render_template('index.html', lhost=lhost, lport=lport)
+
 @app.route('/')
 def index():
-    return render_template('index.html')
-
-@app.route('/wsk')
-def wsk():
-    return app.send_static_file('static/js/wsk.min.js')
+    configs = app.config['user_configs']
+    lhost = configs['lhost']
+    lport = configs['lport']
+    jsfile = render_template('wsk.min.js', lhost=lhost, lport=lport)
+    response = make_response(jsfile)
+    response.headers['Content-Type'] = 'application/javascript'
+    return response
+    #return app.send_static_file('static/js/wsk.min.js')
+    
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
@@ -133,4 +144,5 @@ def run(configs):
 
     app.config['user_configs'] = configs
     app.config['DEBUG'] = configs['debug']
-    socketio.run(app, host=configs['lhost'], port=configs['lport']) 
+    #socketio.run(app, host=configs['lhost'], port=configs['lport']) 
+    socketio.run(app, host='0.0.0.0', port=configs['lport']) 
