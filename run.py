@@ -190,6 +190,4 @@ def set_configs():
 if __name__ == '__main__':
 
     configs = set_configs()
-
-    print json.dumps(configs, indent=True)
     wskeyloggerd.run(configs)

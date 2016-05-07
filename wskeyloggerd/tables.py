@@ -284,6 +284,7 @@ keyboard = [
 def is_printable(ks):
     return any([
         ks == 8,
+        ks == 32,
         ks == 46,
         (ks >= 219 and ks <= 222),
         (ks >= 186 and ks <= 191),
