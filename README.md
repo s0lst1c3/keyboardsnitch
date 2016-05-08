@@ -1,6 +1,6 @@
 #keyboardsnitch
 
-An easy to use __WebSockets__ keylogger for exploiting XSS vulnerabilities. Fast, reliable, and deadly accurate.
+An easy to use __WebSockets__ keylogger for injecting into pages vulnerable to XSS. Fast, reliable, and deadly accurate.
 
 #Key Features
 
